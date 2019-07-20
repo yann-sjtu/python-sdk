@@ -10,5 +10,7 @@ parsimonious
 pycryptodome
 requests
 toolz
+pillow
+ipfsapi
 
 hypothesis>=3.6.1
