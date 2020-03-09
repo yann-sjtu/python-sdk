@@ -4,9 +4,9 @@ contract SoftwareTransaction {
 //关键字“public”使变量能从合约外部访问。
     address public creator;
     mapping (address => uint) public balances;
-    mapping (string => address) public softwareAuthors;
-    mapping (string => uint) public softwarePrices;
-    mapping (string => string) softwareHashes;
+    mapping (bytes32 => address) public softwareAuthors;
+    mapping (bytes32 => uint) public softwarePrices;
+    mapping (bytes32 => string) internal softwareHashes;
 
 //这个构造函数的代码仅仅只在合约创建的时候被运行。
     function SoftwareTransaction() public {
@@ -24,19 +24,18 @@ contract SoftwareTransaction {
         balances[receiver] += amount;
     }
 
-    function publish(string _name, uint _price, string _hash) public {
-        require(softwareAuthors[_name] == address(0), "Software was existed.");
+    function publish(bytes32 _name, uint _price, string _hash) public {
+        require(softwareAuthors[_name] == address(0));
         softwareAuthors[_name] = msg.sender;
         softwarePrices[_name] = _price;
         softwareHashes[_name] = _hash;
     }
 
-    function buySoftware(string _name) public returns(string){
-        require(softwareAuthors[_name] != address(0), "Software was not existed.");
+    function buySoftware(bytes32 _name) public returns(string) {
+        require(softwareAuthors[_name] != address(0));
         if (balances[msg.sender] < softwarePrices[_name]) return "";
         balances[msg.sender] -= softwarePrices[_name];
         balances[softwareAuthors[_name]] += softwarePrices[_name];
-        return softwareHashes[_name]
-
+        return softwareHashes[_name];
     }
 }
