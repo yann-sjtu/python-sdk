@@ -54,13 +54,15 @@ usage = '''
 '''
 print(usage)
 while True:
-	choice = input("请输入数字：（1键发布软件，2键购买软件，其他键退出）")
+	choice = input("请输入数字：（1键发布软件，2键查询软件价格, 3键购买软件，其他键退出）")
 	if choice == '1':
 		file_name = input('''请输入待提交软件所在路径
 路径：''')
 		new_file = ipfs_api.add(file_name)
 		print("软件提交到ipfs成功，哈希值为", new_file['Hash'])
-		args = ['apache'.encode('utf8'), 1000, new_file['Hash']]
+		software_name = input("请输入软件名：")
+		software_price = input("请输入软件价格：")
+		args = [software_name.encode('utf8'), int(software_price), new_file['Hash']]
 		receipt = client.sendRawTransactionGetReceipt(to_address,contract_abi,"publish",args)
 		#print("receipt:",receipt)
 
@@ -78,8 +80,12 @@ while True:
 		print("软件已发布到 Fisco, 交易哈希为",txhash)
 	elif choice == '2':
 		name = input("请输入您想购买的软件：")
+		res = client.call(to_address, contract_abi, "getPrice",[name.encode('utf8')])
+		print("软件价格为：", res[0])
+	elif choice == '3':
+		name = input("请输入您想购买的软件：")
 		res = client.call(to_address, contract_abi, "buySoftware",[name.encode('utf8')])
-		print("所购软件在ipfs的哈希值为", res)
+		print("所购软件在ipfs的哈希值为", res[0])
 		print("正在从ipfs拉取源代码...")
 		file_hash = res[0]
 		res = ipfs_api.get(file_hash)
