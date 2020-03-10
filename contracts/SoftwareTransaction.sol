@@ -31,6 +31,11 @@ contract SoftwareTransaction {
         softwareHashes[_name] = _hash;
     }
 
+    function getPrice(bytes32 _name) public returns(uint) {
+        require(softwareAuthors[_name] != address(0));
+        return softwarePrices[_name];
+    }
+
     function buySoftware(bytes32 _name) public returns(string) {
         require(softwareAuthors[_name] != address(0));
         if (balances[msg.sender] < softwarePrices[_name]) return "";
