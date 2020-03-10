@@ -11,7 +11,6 @@ from client.bcosclient import (
     BcosError
 )
 from io import BytesIO
-from PIL import Image
 import os
 import ipfshttpclient
 from eth_utils import to_checksum_address
