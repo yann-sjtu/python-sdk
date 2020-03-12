@@ -50,9 +50,11 @@ $ pip install -r requirements.txt
 `python demo_software.py`
 
 ## 软件交易合约说明
-本合约主要提供三个接口：
+本合约主要提供四个接口：
   1. publish
   开发者首先将软件源代码上传至ipfs，然后通过该接口发布软件，包括软件名、软件价格以及软件在ipfs上的哈希值
+  2. varify
+  官方验证软件效果，并为软件背书，并开放软件交易（若软件没有第三方背书则无法进行交易）
   2. getPrice
   买家查询软件的价格
   3. buySoftware
