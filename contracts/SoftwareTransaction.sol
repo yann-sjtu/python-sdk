@@ -7,6 +7,7 @@ contract SoftwareTransaction {
     mapping (bytes32 => address) public softwareAuthors;
     mapping (bytes32 => uint) public softwarePrices;
     mapping (bytes32 => string) internal softwareHashes;
+    mapping (bytes32 => bool) internal checked;
 
 //这个构造函数的代码仅仅只在合约创建的时候被运行。
     function SoftwareTransaction() public {
@@ -31,8 +32,13 @@ contract SoftwareTransaction {
         softwareHashes[_name] = _hash;
     }
 
+    function varify(bytes32 _name) public {
+        checked[_name] = true;
+    }
+
     function buySoftware(bytes32 _name) public returns(string) {
         require(softwareAuthors[_name] != address(0));
+        if (checked[_name] == true) return "";
         if (balances[msg.sender] < softwarePrices[_name]) return "";
         balances[msg.sender] -= softwarePrices[_name];
         balances[softwareAuthors[_name]] += softwarePrices[_name];
