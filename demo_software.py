@@ -48,13 +48,15 @@ usage = '''
 
 使用方法:
   1.发布软件
-  2.购买软件
+  2.提供官方验证为软件背书
+  3.键查询软件价格
+  4.键购买软件
   
-  回车键退出
+  其他键退出
 '''
 print(usage)
 while True:
-	choice = input("请输入数字：（1键发布软件，2键查询软件价格, 3键购买软件，其他键退出）")
+	choice = input("请输入数字：（1键发布软件，2键提供官方验证为软件背书，3键查询软件价格, 4键购买软件，其他键退出）")
 	if choice == '1':
 		file_name = input('''请输入待提交软件所在路径
 路径：''')
@@ -79,17 +81,32 @@ while True:
 		#print("receipt output :",outputresult)
 		print("软件已发布到 Fisco, 交易哈希为",txhash)
 	elif choice == '2':
-		name = input("请输入您想购买的软件：")
-		res = client.call(to_address, contract_abi, "getPrice",[name.encode('utf8')])
-		print("软件价格为：", res[0])
+		name = input("请输入软件名：")
+		receipt = client.sendRawTransactionGetReceipt(to_address,contract_abi,"varify",[name.encode('utf8')])
+		if receipt['status'] == '0x0':
+			print("软件{}验证成功，已开放购买".format(name))
+		else:
+			print("软件{}授权失败".format(name))
 	elif choice == '3':
 		name = input("请输入您想购买的软件：")
-		res = client.call(to_address, contract_abi, "buySoftware",[name.encode('utf8')])
-		print("所购软件在ipfs的哈希值为", res[0])
-		print("正在从ipfs拉取源代码...")
-		file_hash = res[0]
-		res = ipfs_api.get(file_hash)
-		print("源代码拉取成功！")
+		receipt = client.sendRawTransactionGetReceipt(to_address,contract_abi,"getPrice",[name.encode('utf8')])
+		if receipt['status'] != '0x0':
+			print("软件{}不存在".format(name))
+		else:
+			res = client.call(to_address, contract_abi, "getPrice",[name.encode('utf8')])
+			print("软件价格为：", res[0])
+	elif choice == '4':
+		name = input("请输入您想购买的软件：")
+		receipt = client.sendRawTransactionGetReceipt(to_address, contract_abi, "buySoftware", [name.encode('utf8')])
+		if receipt['status'] != '0x0':
+			print("软件购买失败")
+		else:
+			res = client.call(to_address, contract_abi, "buySoftware",[name.encode('utf8')])
+			print("所购软件在ipfs的哈希值为", res[0])
+			print("正在从ipfs拉取源代码...")
+			file_hash = res[0]
+			res = ipfs_api.get(file_hash)
+			print("源代码拉取成功！")
 	else:
 		choice2 = input("确定退出吗？ y/n")
 		if choice2 != 'y' and choice2 != 'Y':

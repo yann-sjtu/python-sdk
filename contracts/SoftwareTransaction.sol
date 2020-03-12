@@ -31,10 +31,6 @@ contract SoftwareTransaction {
         softwarePrices[_name] = _price;
         softwareHashes[_name] = _hash;
     }
-
-    function varify(bytes32 _name) public {
-        checked[_name] = true;
-    }
     
     function getPrice(bytes32 _name) public returns(uint) {
         require(softwareAuthors[_name] != address(0));
@@ -48,5 +44,10 @@ contract SoftwareTransaction {
         balances[msg.sender] -= softwarePrices[_name];
         balances[softwareAuthors[_name]] += softwarePrices[_name];
         return softwareHashes[_name];
+    }
+
+    function varify(bytes32 _name) public {
+        require(softwareAuthors[_name] != address(0));
+        checked[_name] = true;
     }
 }
