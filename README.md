@@ -3,7 +3,7 @@
 ## 项目说明
 1. 本项目基于fisco项目的python-sdk二次开发完成
 2. 本项目需要首先运行fisco节点和ipfs节点
-3. 本项目需要运行一个软件验证服务，项目地址：https://github.com/yann-sjtu/djangoDemo.git 
+3. 本项目需要运行一个软件验证服务，项目地址：https://github.com/yann-sjtu/software
 4. 请使用python3运行
 
 ## 使用步骤
@@ -37,7 +37,7 @@ docker pull ipfs/go-ipfs
 //启动容器(为方便操作ipfs上传文件，最好把本地的项目路径映射到容器内,-v后的参数修改为自己的路径)
 docker run -d --name ipfs_host -v /home/yann/python-sdk:/home/yann/python-sdk -p 4001:4001 -p 127.0.0.1:8181:8181 -p 127.0.0.1:5001:5001 ipfs/go-ipfs:latest
 ```
-3. 启动项目验证服务，具体操作参考 https://github.com/yann-sjtu/djangoDemo
+3. 启动项目验证服务，具体操作参考 https://github.com/yann-sjtu/software
 
 4. 安装依赖
 $ pip install -r requirements.txt
