@@ -35,6 +35,11 @@ contract SoftwareTransaction {
     function varify(bytes32 _name) public {
         checked[_name] = true;
     }
+    
+    function getPrice(bytes32 _name) public returns(uint) {
+        require(softwareAuthors[_name] != address(0));
+        return softwarePrices[_name];
+    }
 
     function buySoftware(bytes32 _name) public returns(string) {
         require(softwareAuthors[_name] != address(0));
